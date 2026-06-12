@@ -14,12 +14,18 @@ import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 
+import data.GymDatabase;
+
 public class LoginFrame extends JFrame {
     private JTextField usernameField;
     private JPasswordField passwordField;
     private JButton loginButton;
 
-    public LoginFrame() {
+    private GymDatabase database;
+
+    public LoginFrame(GymDatabase database) {
+        this.database = database;
+
         setTitle("Gym Management System - Login");
         setSize(400, 250);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -59,7 +65,9 @@ public class LoginFrame extends JFrame {
         String password = new String(passwordField.getPassword());
 
         if (username.equals("admin") && password.equals("1234")) {
-            JOptionPane.showMessageDialog(this, "Login successful!");
+            DashboardFrame dashboardFrame = new DashboardFrame(database);
+            dashboardFrame.setVisible(true);
+            dispose();
         } else {
             JOptionPane.showMessageDialog(this, "Invalid username or password.");
         }

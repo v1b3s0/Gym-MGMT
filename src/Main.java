@@ -1,11 +1,14 @@
 import javax.swing.SwingUtilities;
 
+import data.GymDatabase;
 import ui.LoginFrame;
 
 public class Main {
     public static void main(String[] args) {
         SwingUtilities.invokeLater(() -> {
-            LoginFrame loginFrame = new LoginFrame();
+            GymDatabase database = new GymDatabase();
+
+            LoginFrame loginFrame = new LoginFrame(database);
             loginFrame.setVisible(true);
         });
     }
