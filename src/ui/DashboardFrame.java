@@ -43,7 +43,7 @@ public class DashboardFrame extends JFrame {
         setJMenuBar(menuBar);
 
         memberMenu.addActionListener(e -> showMemberPanel());
-        trainerMenu.addActionListener(e -> showPage("Trainer Management"));
+        trainerMenu.addActionListener(e -> showTrainerPanel());
         membershipMenu.addActionListener(e -> showPage("Membership Plans"));
         workoutMenu.addActionListener(e -> showPage("Workout Schedule"));
         paymentMenu.addActionListener(e -> showPage("Payment History"));
@@ -76,6 +76,16 @@ public class DashboardFrame extends JFrame {
 
         MemberPanel memberPanel = new MemberPanel(database);
         contentPanel.add(memberPanel, BorderLayout.CENTER);
+
+        contentPanel.revalidate();
+        contentPanel.repaint();
+    }
+
+    private void showTrainerPanel() {
+        contentPanel.removeAll();
+
+        TrainerPanel trainerPanel = new TrainerPanel(database);
+        contentPanel.add(trainerPanel, BorderLayout.CENTER);
 
         contentPanel.revalidate();
         contentPanel.repaint();
