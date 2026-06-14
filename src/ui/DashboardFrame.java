@@ -90,4 +90,24 @@ public class DashboardFrame extends JFrame {
         contentPanel.revalidate();
         contentPanel.repaint();
     }
+
+    private void showMembershipPanel() {
+        contentPanel.removeAll();
+
+        MembershipPanel membershipPanel = new MembershipPanel(database);
+        contentPanel.add(membershipPanel, BorderLayout.CENTER);
+
+        contentPanel.revalidate();
+        contentPanel.repaint();
+    }
+
+    private void showWorkoutSchedulePanel() {
+        contentPanel.removeAll();
+
+        WorkoutSchedulePanel workoutPanel = new WorkoutSchedulePanel(database);
+        contentPanel.add(workoutschedulePanel, BorderLayout.CENTER);
+
+        contentPanel.revalidate();
+        contentPanel.repaint();
+    }
 }
