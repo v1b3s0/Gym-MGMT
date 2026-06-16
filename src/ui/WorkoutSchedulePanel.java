@@ -22,6 +22,7 @@ import model.WorkoutSchedule;
 
 public class WorkoutSchedulePanel extends JPanel {
     private GymDatabase database;
+    private Runnable backAction;
 
     private JComboBox<String> memberBox;
     private JComboBox<String> trainerBox;
@@ -31,12 +32,14 @@ public class WorkoutSchedulePanel extends JPanel {
 
     private JButton submitButton;
     private JButton clearButton;
+    private JButton backButton;
 
     private DefaultTableModel workoutTableModel;
     private JTable workoutTable;
 
-    public WorkoutSchedulePanel(GymDatabase database) {
+    public WorkoutSchedulePanel(GymDatabase database, Runnable backAction) {
         this.database = database;
+        this.backAction = backAction;
 
         setLayout(new BorderLayout());
 
@@ -80,6 +83,7 @@ public class WorkoutSchedulePanel extends JPanel {
 
         submitButton = new JButton("Save Schedule");
         clearButton = new JButton("Clear");
+        backButton = new JButton("Back");
 
         formPanel.add(new JLabel("Member:"));
         formPanel.add(memberBox);
@@ -99,6 +103,7 @@ public class WorkoutSchedulePanel extends JPanel {
         JPanel buttonPanel = new JPanel();
         buttonPanel.add(submitButton);
         buttonPanel.add(clearButton);
+        buttonPanel.add(backButton);
 
         formPanel.add(new JLabel());
         formPanel.add(buttonPanel);
@@ -122,6 +127,7 @@ public class WorkoutSchedulePanel extends JPanel {
 
         submitButton.addActionListener(e -> submitWorkoutSchedule());
         clearButton.addActionListener(e -> clearForm());
+        backButton.addActionListener(e -> backAction.run());
 
         add(mainPanel, BorderLayout.CENTER);
     }

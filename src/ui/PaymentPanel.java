@@ -23,6 +23,7 @@ import model.Payment;
 
 public class PaymentPanel extends JPanel {
     private GymDatabase database;
+    private Runnable backAction;
 
     private JComboBox<String> memberBox;
     private JComboBox<String> membershipBox;
@@ -31,12 +32,14 @@ public class PaymentPanel extends JPanel {
 
     private JButton submitButton;
     private JButton clearButton;
+    private JButton backButton;
 
     private DefaultTableModel paymentTableModel;
     private JTable paymentTable;
 
-    public PaymentPanel(GymDatabase database) {
+    public PaymentPanel(GymDatabase database, Runnable backAction) {
         this.database = database;
+        this.backAction = backAction;
 
         setLayout(new BorderLayout());
 
@@ -62,6 +65,7 @@ public class PaymentPanel extends JPanel {
 
         submitButton = new JButton("Add Payment");
         clearButton = new JButton("Clear");
+        backButton = new JButton("Back");
 
         formPanel.add(new JLabel("Member:"));
         formPanel.add(memberBox);
@@ -78,6 +82,7 @@ public class PaymentPanel extends JPanel {
         JPanel buttonPanel = new JPanel();
         buttonPanel.add(submitButton);
         buttonPanel.add(clearButton);
+        buttonPanel.add(backButton);
 
         formPanel.add(new JLabel());
         formPanel.add(buttonPanel);
@@ -100,6 +105,7 @@ public class PaymentPanel extends JPanel {
 
         submitButton.addActionListener(e -> submitPayment());
         clearButton.addActionListener(e -> clearForm());
+        backButton.addActionListener(e -> backAction.run());
 
         add(mainPanel, BorderLayout.CENTER);
     }

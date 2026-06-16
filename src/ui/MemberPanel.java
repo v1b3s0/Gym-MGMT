@@ -25,6 +25,7 @@ import model.Member;
 
 public class MemberPanel extends JPanel {
     private GymDatabase database;
+    private Runnable backAction;
 
     private JTextField nameField;
     private JTextField ageField;
@@ -51,8 +52,9 @@ public class MemberPanel extends JPanel {
 
     private ButtonGroup genderGroup;
 
-    public MemberPanel(GymDatabase database) {
+    public MemberPanel(GymDatabase database, Runnable backAction) {
         this.database = database;
+        this.backAction = backAction;
 
         setLayout(new BorderLayout());
 
@@ -156,6 +158,7 @@ public class MemberPanel extends JPanel {
 
         submitButton.addActionListener(e -> submitMember());
         clearButton.addActionListener(e -> clearForm());
+        backButton.addActionListener(e -> backAction.run());
 
         add(mainPanel, BorderLayout.CENTER);
     }

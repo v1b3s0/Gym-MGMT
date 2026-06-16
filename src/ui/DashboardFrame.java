@@ -1,6 +1,7 @@
 package ui;
 
 import java.awt.BorderLayout;
+import java.awt.Dimension;
 import java.awt.Font;
 
 import javax.swing.JFrame;
@@ -21,6 +22,9 @@ public class DashboardFrame extends JFrame {
 
         setTitle("Gym Management System - Dashboard");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setSize(1100, 750);
+        setMinimumSize(new Dimension(900, 600));
+        setLocationRelativeTo(null);
         setExtendedState(JFrame.MAXIMIZED_BOTH);
         setLayout(new BorderLayout());
 
@@ -51,18 +55,27 @@ public class DashboardFrame extends JFrame {
         exitMenu.addActionListener(e -> System.exit(0));
 
         contentPanel = new JPanel(new BorderLayout());
+        add(contentPanel, BorderLayout.CENTER);
+
+        showWelcomePage();
+    }
+
+    private void showWelcomePage() {
+        contentPanel.removeAll();
 
         JLabel welcomeLabel = new JLabel("Welcome to the Gym Management System", SwingConstants.CENTER);
         welcomeLabel.setFont(new Font("Arial", Font.BOLD, 28));
 
         contentPanel.add(welcomeLabel, BorderLayout.CENTER);
-        add(contentPanel, BorderLayout.CENTER);
+
+        contentPanel.revalidate();
+        contentPanel.repaint();
     }
 
     private void showMemberPanel() {
         contentPanel.removeAll();
 
-        MemberPanel memberPanel = new MemberPanel(database);
+        MemberPanel memberPanel = new MemberPanel(database, () -> showWelcomePage());
         contentPanel.add(memberPanel, BorderLayout.CENTER);
 
         contentPanel.revalidate();
@@ -72,7 +85,7 @@ public class DashboardFrame extends JFrame {
     private void showTrainerPanel() {
         contentPanel.removeAll();
 
-        TrainerPanel trainerPanel = new TrainerPanel(database);
+        TrainerPanel trainerPanel = new TrainerPanel(database, () -> showWelcomePage());
         contentPanel.add(trainerPanel, BorderLayout.CENTER);
 
         contentPanel.revalidate();
@@ -82,7 +95,7 @@ public class DashboardFrame extends JFrame {
     private void showMembershipPanel() {
         contentPanel.removeAll();
 
-        MembershipPanel membershipPanel = new MembershipPanel();
+        MembershipPanel membershipPanel = new MembershipPanel(() -> showWelcomePage());
         contentPanel.add(membershipPanel, BorderLayout.CENTER);
 
         contentPanel.revalidate();
@@ -92,7 +105,7 @@ public class DashboardFrame extends JFrame {
     private void showWorkoutSchedulePanel() {
         contentPanel.removeAll();
 
-        WorkoutSchedulePanel workoutSchedulePanel = new WorkoutSchedulePanel(database);
+        WorkoutSchedulePanel workoutSchedulePanel = new WorkoutSchedulePanel(database, () -> showWelcomePage());
         contentPanel.add(workoutSchedulePanel, BorderLayout.CENTER);
 
         contentPanel.revalidate();
@@ -102,7 +115,7 @@ public class DashboardFrame extends JFrame {
     private void showPaymentPanel() {
         contentPanel.removeAll();
 
-        PaymentPanel paymentPanel = new PaymentPanel(database);
+        PaymentPanel paymentPanel = new PaymentPanel(database, () -> showWelcomePage());
         contentPanel.add(paymentPanel, BorderLayout.CENTER);
 
         contentPanel.revalidate();

@@ -5,13 +5,19 @@ import java.awt.Font;
 import java.awt.GridLayout;
 
 import javax.swing.BorderFactory;
+import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.SwingConstants;
 
 public class MembershipPanel extends JPanel {
+    private Runnable backAction;
 
-    public MembershipPanel() {
+    private JButton backButton;
+
+    public MembershipPanel(Runnable backAction) {
+        this.backAction = backAction;
+
         setLayout(new BorderLayout());
 
         JLabel titleLabel = new JLabel("Membership Plans", SwingConstants.CENTER);
@@ -26,7 +32,14 @@ public class MembershipPanel extends JPanel {
         plansPanel.add(createPlanPanel("Quarterly", "250 AED", "Access for 3 months"));
         plansPanel.add(createPlanPanel("Yearly", "900 AED", "Access for 12 months"));
 
+        backButton = new JButton("Back");
+        backButton.addActionListener(e -> backAction.run());
+
+        JPanel bottomPanel = new JPanel();
+        bottomPanel.add(backButton);
+
         add(plansPanel, BorderLayout.CENTER);
+        add(bottomPanel, BorderLayout.SOUTH);
     }
 
     private JPanel createPlanPanel(String planName, String price, String description) {
