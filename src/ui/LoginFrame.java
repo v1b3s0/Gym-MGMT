@@ -68,8 +68,8 @@ public class LoginFrame extends JFrame {
     }
 
     private void validateLogin() {
-        String username = usernameField.getText();
-        String password = new String(passwordField.getPassword());
+        String username = usernameField.getText().trim();
+        String password = new String(passwordField.getPassword()).trim();
 
         if (username.equals("admin") && password.equals("1234")) {
             DashboardFrame dashboardFrame = new DashboardFrame(database);

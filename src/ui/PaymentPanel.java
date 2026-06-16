@@ -18,6 +18,7 @@ import javax.swing.table.DefaultTableModel;
 import data.GymDatabase;
 import model.Member;
 import model.Payment;
+import util.ValidationUtil;
 
 public class PaymentPanel extends JPanel {
     private GymDatabase database;
@@ -138,19 +139,22 @@ public class PaymentPanel extends JPanel {
             return;
         }
 
-        if (paymentDate.isEmpty() || amountText.isEmpty()) {
+        if (ValidationUtil.isEmpty(paymentDate) || ValidationUtil.isEmpty(amountText)) {
             JOptionPane.showMessageDialog(this, "Please fill in all required fields.");
             return;
         }
 
-        double amount;
-
-        try {
-            amount = Double.parseDouble(amountText);
-        } catch (NumberFormatException ex) {
-            JOptionPane.showMessageDialog(this, "Amount must be a number.");
+        if (!ValidationUtil.isValidDate(paymentDate)) {
+            JOptionPane.showMessageDialog(this, "Payment date must be in YYYY-MM-DD format.");
             return;
         }
+
+        if (!ValidationUtil.isPositiveDouble(amountText)) {
+            JOptionPane.showMessageDialog(this, "Amount must be a positive number.");
+            return;
+        }
+
+        double amount = Double.parseDouble(amountText);
 
         Payment payment = new Payment(memberName, membershipType, paymentDate, amount);
 

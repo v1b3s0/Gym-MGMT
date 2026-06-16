@@ -20,6 +20,7 @@ import javax.swing.table.DefaultTableModel;
 
 import data.GymDatabase;
 import model.Member;
+import util.ValidationUtil;
 
 public class MemberPanel extends JPanel {
     private GymDatabase database;
@@ -182,19 +183,30 @@ public class MemberPanel extends JPanel {
         String phone = phoneField.getText().trim();
         String email = emailField.getText().trim();
 
-        if (name.isEmpty() || ageText.isEmpty() || phone.isEmpty() || email.isEmpty()) {
+        if (ValidationUtil.isEmpty(name)
+                || ValidationUtil.isEmpty(ageText)
+                || ValidationUtil.isEmpty(phone)
+                || ValidationUtil.isEmpty(email)) {
             JOptionPane.showMessageDialog(this, "Please fill in all required fields.");
             return;
         }
 
-        int age;
-
-        try {
-            age = Integer.parseInt(ageText);
-        } catch (NumberFormatException ex) {
-            JOptionPane.showMessageDialog(this, "Age must be a number.");
+        if (!ValidationUtil.isPositiveInteger(ageText)) {
+            JOptionPane.showMessageDialog(this, "Age must be a positive number.");
             return;
         }
+
+        if (!ValidationUtil.isValidPhone(phone)) {
+            JOptionPane.showMessageDialog(this, "Phone number must contain 7 to 15 digits.");
+            return;
+        }
+
+        if (!ValidationUtil.isValidEmail(email)) {
+            JOptionPane.showMessageDialog(this, "Please enter a valid email address.");
+            return;
+        }
+
+        int age = Integer.parseInt(ageText);
 
         String gender;
 

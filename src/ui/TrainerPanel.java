@@ -17,6 +17,7 @@ import javax.swing.table.DefaultTableModel;
 import data.GymDatabase;
 import model.Member;
 import model.Trainer;
+import util.ValidationUtil;
 
 public class TrainerPanel extends JPanel {
     private GymDatabase database;
@@ -141,8 +142,20 @@ public class TrainerPanel extends JPanel {
         String phone = phoneField.getText().trim();
         String email = emailField.getText().trim();
 
-        if (name.isEmpty() || phone.isEmpty() || email.isEmpty()) {
+        if (ValidationUtil.isEmpty(name)
+                || ValidationUtil.isEmpty(phone)
+                || ValidationUtil.isEmpty(email)) {
             JOptionPane.showMessageDialog(this, "Please fill in all required fields.");
+            return;
+        }
+
+        if (!ValidationUtil.isValidPhone(phone)) {
+            JOptionPane.showMessageDialog(this, "Phone number must contain 7 to 15 digits.");
+            return;
+        }
+
+        if (!ValidationUtil.isValidEmail(email)) {
+            JOptionPane.showMessageDialog(this, "Please enter a valid email address.");
             return;
         }
 
