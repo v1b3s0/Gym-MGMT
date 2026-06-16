@@ -101,7 +101,9 @@ public class TrainerPanel extends JPanel {
         trainerTableModel = new DefaultTableModel(columns, 0);
         trainerTable = new JTable(trainerTableModel);
 
-        JScrollPane tableScrollPane = new JScrollPane(trainerTable);
+        loadExistingTrainersIntoTable();
+
+        JScrollPane tableScrollPane = AppStyle.createTableScrollPane(trainerTable);
 
         JPanel mainPanel = new JPanel(new BorderLayout(10, 10));
         mainPanel.add(formPanel, BorderLayout.NORTH);
@@ -111,7 +113,7 @@ public class TrainerPanel extends JPanel {
         clearButton.addActionListener(e -> clearForm());
         backButton.addActionListener(e -> backAction.run());
 
-        add(mainPanel, BorderLayout.CENTER);
+        add(AppStyle.createPageScrollPane(mainPanel), BorderLayout.CENTER);
     }
 
     private void loadMembersIntoComboBox() {
@@ -119,6 +121,18 @@ public class TrainerPanel extends JPanel {
 
         for (Member member : database.getMembers()) {
             assignedMemberBox.addItem(member.getName());
+        }
+    }
+
+    private void loadExistingTrainersIntoTable() {
+        for (Trainer trainer : database.getTrainers()) {
+            trainerTableModel.addRow(new Object[] {
+                    trainer.getName(),
+                    trainer.getPhoneNumber(),
+                    trainer.getEmail(),
+                    trainer.getSpecialization(),
+                    trainer.getAssignedMemberName()
+            });
         }
     }
 

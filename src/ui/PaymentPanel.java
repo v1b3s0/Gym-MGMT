@@ -93,7 +93,9 @@ public class PaymentPanel extends JPanel {
         paymentTableModel = new DefaultTableModel(columns, 0);
         paymentTable = new JTable(paymentTableModel);
 
-        JScrollPane tableScrollPane = new JScrollPane(paymentTable);
+        loadExistingPaymentsIntoTable();
+
+        JScrollPane tableScrollPane = AppStyle.createTableScrollPane(paymentTable);
 
         JPanel mainPanel = new JPanel(new BorderLayout(10, 10));
         mainPanel.add(formPanel, BorderLayout.NORTH);
@@ -103,7 +105,7 @@ public class PaymentPanel extends JPanel {
         clearButton.addActionListener(e -> clearForm());
         backButton.addActionListener(e -> backAction.run());
 
-        add(mainPanel, BorderLayout.CENTER);
+        add(AppStyle.createPageScrollPane(mainPanel), BorderLayout.CENTER);
     }
 
     private void loadMembersIntoComboBox() {
@@ -111,6 +113,17 @@ public class PaymentPanel extends JPanel {
 
         for (Member member : database.getMembers()) {
             memberBox.addItem(member.getName());
+        }
+    }
+
+    private void loadExistingPaymentsIntoTable() {
+        for (Payment payment : database.getPayments()) {
+            paymentTableModel.addRow(new Object[] {
+                    payment.getMemberName(),
+                    payment.getMembershipType(),
+                    payment.getPaymentDate(),
+                    payment.getAmount()
+            });
         }
     }
 

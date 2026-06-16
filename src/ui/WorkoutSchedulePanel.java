@@ -115,7 +115,9 @@ public class WorkoutSchedulePanel extends JPanel {
         workoutTableModel = new DefaultTableModel(columns, 0);
         workoutTable = new JTable(workoutTableModel);
 
-        JScrollPane tableScrollPane = new JScrollPane(workoutTable);
+        loadExistingWorkoutSchedulesIntoTable();
+
+        JScrollPane tableScrollPane = AppStyle.createTableScrollPane(workoutTable);
 
         JPanel mainPanel = new JPanel(new BorderLayout(10, 10));
         mainPanel.add(formPanel, BorderLayout.NORTH);
@@ -125,7 +127,7 @@ public class WorkoutSchedulePanel extends JPanel {
         clearButton.addActionListener(e -> clearForm());
         backButton.addActionListener(e -> backAction.run());
 
-        add(mainPanel, BorderLayout.CENTER);
+        add(AppStyle.createPageScrollPane(mainPanel), BorderLayout.CENTER);
     }
 
     private void loadMembersIntoComboBox() {
@@ -141,6 +143,18 @@ public class WorkoutSchedulePanel extends JPanel {
 
         for (Trainer trainer : database.getTrainers()) {
             trainerBox.addItem(trainer.getName());
+        }
+    }
+
+    private void loadExistingWorkoutSchedulesIntoTable() {
+        for (WorkoutSchedule workoutSchedule : database.getWorkoutSchedules()) {
+            workoutTableModel.addRow(new Object[] {
+                    workoutSchedule.getMemberName(),
+                    workoutSchedule.getTrainerName(),
+                    workoutSchedule.getWorkoutType(),
+                    workoutSchedule.getDay(),
+                    workoutSchedule.getTime()
+            });
         }
     }
 

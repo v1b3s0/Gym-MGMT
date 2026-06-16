@@ -146,7 +146,9 @@ public class MemberPanel extends JPanel {
         memberTableModel = new DefaultTableModel(columns, 0);
         memberTable = new JTable(memberTableModel);
 
-        JScrollPane tableScrollPane = new JScrollPane(memberTable);
+        JScrollPane tableScrollPane = AppStyle.createTableScrollPane(memberTable);
+
+        loadExistingMembersIntoTable();
 
         JPanel mainPanel = new JPanel(new BorderLayout(10, 10));
         mainPanel.add(formPanel, BorderLayout.NORTH);
@@ -156,7 +158,22 @@ public class MemberPanel extends JPanel {
         clearButton.addActionListener(e -> clearForm());
         backButton.addActionListener(e -> backAction.run());
 
-        add(mainPanel, BorderLayout.CENTER);
+        add(AppStyle.createPageScrollPane(mainPanel), BorderLayout.CENTER);
+    }
+
+    private void loadExistingMembersIntoTable() {
+        for (Member member : database.getMembers()) {
+            memberTableModel.addRow(new Object[] {
+                    member.getName(),
+                    member.getAge(),
+                    member.getPhoneNumber(),
+                    member.getEmail(),
+                    member.getGender(),
+                    member.getMembershipType(),
+                    member.getFitnessGoals(),
+                    member.getNotes()
+            });
+        }
     }
 
     private void submitMember() {
