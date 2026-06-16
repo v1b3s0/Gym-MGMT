@@ -46,7 +46,7 @@ public class DashboardFrame extends JFrame {
         trainerMenu.addActionListener(e -> showTrainerPanel());
         membershipMenu.addActionListener(e -> showMembershipPanel());
         workoutMenu.addActionListener(e -> showWorkoutSchedulePanel());
-        paymentMenu.addActionListener(e -> showPage("Payment History"));
+        paymentMenu.addActionListener(e -> showPaymentPanel());
 
         exitMenu.addActionListener(e -> System.exit(0));
 
@@ -57,18 +57,6 @@ public class DashboardFrame extends JFrame {
 
         contentPanel.add(welcomeLabel, BorderLayout.CENTER);
         add(contentPanel, BorderLayout.CENTER);
-    }
-
-    private void showPage(String title) {
-        contentPanel.removeAll();
-
-        JLabel pageLabel = new JLabel(title, SwingConstants.CENTER);
-        pageLabel.setFont(new Font("Arial", Font.BOLD, 28));
-
-        contentPanel.add(pageLabel, BorderLayout.CENTER);
-
-        contentPanel.revalidate();
-        contentPanel.repaint();
     }
 
     private void showMemberPanel() {
@@ -106,6 +94,16 @@ public class DashboardFrame extends JFrame {
 
         WorkoutSchedulePanel workoutSchedulePanel = new WorkoutSchedulePanel(database);
         contentPanel.add(workoutSchedulePanel, BorderLayout.CENTER);
+
+        contentPanel.revalidate();
+        contentPanel.repaint();
+    }
+
+    private void showPaymentPanel() {
+        contentPanel.removeAll();
+
+        PaymentPanel paymentPanel = new PaymentPanel(database);
+        contentPanel.add(paymentPanel, BorderLayout.CENTER);
 
         contentPanel.revalidate();
         contentPanel.repaint();
