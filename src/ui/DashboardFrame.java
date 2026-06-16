@@ -25,7 +25,6 @@ public class DashboardFrame extends JFrame {
         setSize(1100, 750);
         setMinimumSize(new Dimension(900, 600));
         setLocationRelativeTo(null);
-        setExtendedState(JFrame.MAXIMIZED_BOTH);
         setLayout(new BorderLayout());
 
         JMenuBar menuBar = new JMenuBar();

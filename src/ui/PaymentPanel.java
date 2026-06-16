@@ -1,11 +1,9 @@
 package ui;
 
 import java.awt.BorderLayout;
-import java.awt.Font;
 import java.awt.GridLayout;
 import java.time.LocalDate;
 
-import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
@@ -23,7 +21,6 @@ import model.Payment;
 
 public class PaymentPanel extends JPanel {
     private GymDatabase database;
-    private Runnable backAction;
 
     private JComboBox<String> memberBox;
     private JComboBox<String> membershipBox;
@@ -39,17 +36,16 @@ public class PaymentPanel extends JPanel {
 
     public PaymentPanel(GymDatabase database, Runnable backAction) {
         this.database = database;
-        this.backAction = backAction;
 
         setLayout(new BorderLayout());
 
         JLabel titleLabel = new JLabel("Payment History", SwingConstants.CENTER);
-        titleLabel.setFont(new Font("Arial", Font.BOLD, 26));
+        titleLabel.setFont(AppStyle.TITLE_FONT);
 
         add(titleLabel, BorderLayout.NORTH);
 
         JPanel formPanel = new JPanel(new GridLayout(5, 2, 10, 10));
-        formPanel.setBorder(BorderFactory.createEmptyBorder(20, 40, 20, 40));
+        formPanel.setBorder(AppStyle.FORM_PADDING);
 
         memberBox = new JComboBox<>();
         loadMembersIntoComboBox();

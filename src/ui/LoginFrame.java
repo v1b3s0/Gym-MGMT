@@ -27,7 +27,8 @@ public class LoginFrame extends JFrame {
         this.database = database;
 
         setTitle("Gym Management System - Login");
-        setSize(400, 250);
+        setSize(450, 280);
+        setResizable(false);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
         setLayout(new BorderLayout());
@@ -57,7 +58,13 @@ public class LoginFrame extends JFrame {
 
         add(titleLabel, BorderLayout.NORTH);
         add(formPanel, BorderLayout.CENTER);
+
         loginButton.addActionListener(e -> validateLogin());
+
+        getRootPane().setDefaultButton(loginButton);
+
+        usernameField.addActionListener(e -> passwordField.requestFocusInWindow());
+        passwordField.addActionListener(e -> validateLogin());
     }
 
     private void validateLogin() {

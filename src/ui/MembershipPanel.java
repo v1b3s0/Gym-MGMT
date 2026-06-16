@@ -11,22 +11,19 @@ import javax.swing.JPanel;
 import javax.swing.SwingConstants;
 
 public class MembershipPanel extends JPanel {
-    private Runnable backAction;
-
     private JButton backButton;
 
     public MembershipPanel(Runnable backAction) {
-        this.backAction = backAction;
 
         setLayout(new BorderLayout());
 
         JLabel titleLabel = new JLabel("Membership Plans", SwingConstants.CENTER);
-        titleLabel.setFont(new Font("Arial", Font.BOLD, 26));
+        titleLabel.setFont(AppStyle.TITLE_FONT);
 
         add(titleLabel, BorderLayout.NORTH);
 
         JPanel plansPanel = new JPanel(new GridLayout(1, 3, 20, 20));
-        plansPanel.setBorder(BorderFactory.createEmptyBorder(40, 40, 40, 40));
+        plansPanel.setBorder(AppStyle.PAGE_PADDING);
 
         plansPanel.add(createPlanPanel("Monthly", "100 AED", "Access for 1 month"));
         plansPanel.add(createPlanPanel("Quarterly", "250 AED", "Access for 3 months"));

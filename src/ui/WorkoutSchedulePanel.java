@@ -1,10 +1,8 @@
 package ui;
 
 import java.awt.BorderLayout;
-import java.awt.Font;
 import java.awt.GridLayout;
 
-import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
@@ -22,7 +20,6 @@ import model.WorkoutSchedule;
 
 public class WorkoutSchedulePanel extends JPanel {
     private GymDatabase database;
-    private Runnable backAction;
 
     private JComboBox<String> memberBox;
     private JComboBox<String> trainerBox;
@@ -39,17 +36,16 @@ public class WorkoutSchedulePanel extends JPanel {
 
     public WorkoutSchedulePanel(GymDatabase database, Runnable backAction) {
         this.database = database;
-        this.backAction = backAction;
 
         setLayout(new BorderLayout());
 
         JLabel titleLabel = new JLabel("Workout Schedule", SwingConstants.CENTER);
-        titleLabel.setFont(new Font("Arial", Font.BOLD, 26));
+        titleLabel.setFont(AppStyle.TITLE_FONT);
 
         add(titleLabel, BorderLayout.NORTH);
 
         JPanel formPanel = new JPanel(new GridLayout(6, 2, 10, 10));
-        formPanel.setBorder(BorderFactory.createEmptyBorder(20, 40, 20, 40));
+        formPanel.setBorder(AppStyle.FORM_PADDING);
 
         memberBox = new JComboBox<>();
         trainerBox = new JComboBox<>();
