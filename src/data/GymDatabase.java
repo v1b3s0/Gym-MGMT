@@ -1,4 +1,4 @@
-    package data;
+package data;
 
 import java.util.ArrayList;
 
@@ -14,26 +14,30 @@ public class GymDatabase {
     private ArrayList<Payment> payments;
 
     public GymDatabase() {
-        members = new ArrayList<>();
-        trainers = new ArrayList<>();
-        workoutSchedules = new ArrayList<>();
-        payments = new ArrayList<>();
+        members = FileManager.loadMembers();
+        trainers = FileManager.loadTrainers();
+        workoutSchedules = FileManager.loadWorkoutSchedules();
+        payments = FileManager.loadPayments();
     }
 
     public void addMember(Member member) {
         members.add(member);
+        FileManager.saveMembers(members);
     }
 
     public void addTrainer(Trainer trainer) {
         trainers.add(trainer);
+        FileManager.saveTrainers(trainers);
     }
 
     public void addWorkoutSchedule(WorkoutSchedule workoutSchedule) {
         workoutSchedules.add(workoutSchedule);
+        FileManager.saveWorkoutSchedules(workoutSchedules);
     }
 
     public void addPayment(Payment payment) {
         payments.add(payment);
+        FileManager.savePayments(payments);
     }
 
     public ArrayList<Member> getMembers() {
