@@ -1,6 +1,7 @@
 package ui;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Insets;
@@ -10,6 +11,7 @@ import javax.swing.BorderFactory;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
+import javax.swing.JViewport;
 import javax.swing.Scrollable;
 import javax.swing.UIManager;
 import javax.swing.border.Border;
@@ -20,6 +22,23 @@ public class AppStyle {
     public static final Font LABEL_FONT = new Font("Arial", Font.PLAIN, 14);
     public static final Font FIELD_FONT = new Font("Arial", Font.PLAIN, 14);
     public static final Font BUTTON_FONT = new Font("Arial", Font.BOLD, 14);
+
+    public static final Font CARD_TITLE_FONT = new Font("Arial", Font.BOLD, 17);
+    public static final Font CARD_DESCRIPTION_FONT = new Font("Arial", Font.PLAIN, 12);
+
+    public static final Color BACKGROUND_COLOR = new Color(245, 247, 250);
+    public static final Color DASHBOARD_PANEL_COLOR = new Color(232, 238, 248);
+
+    public static final Color CARD_COLOR = new Color(255, 255, 255);
+    public static final Color CARD_HOVER_COLOR = new Color(238, 244, 255);
+    public static final Color CARD_PRESS_COLOR = new Color(220, 232, 255);
+    public static final Color CARD_BORDER_COLOR = new Color(190, 200, 220);
+
+    public static final Color TEXT_COLOR = new Color(35, 40, 50);
+    public static final Color SUB_TEXT_COLOR = new Color(90, 95, 105);
+    public static final Color ACCENT_COLOR = new Color(60, 100, 180);
+
+    public static final int CARD_RADIUS = 32;
 
     public static final Border FORM_PADDING = BorderFactory.createEmptyBorder(20, 40, 20, 40);
     public static final Border PAGE_PADDING = BorderFactory.createEmptyBorder(25, 35, 25, 35);
@@ -63,10 +82,15 @@ public class AppStyle {
     }
 
     public static JScrollPane createPageScrollPane(JPanel panel) {
+        panel.setBackground(BACKGROUND_COLOR);
+
         ScrollablePanel scrollablePanel = new ScrollablePanel(panel);
 
         JScrollPane scrollPane = new JScrollPane(scrollablePanel);
         scrollPane.setBorder(null);
+        scrollPane.setBackground(BACKGROUND_COLOR);
+        scrollPane.getViewport().setBackground(BACKGROUND_COLOR);
+
         scrollPane.getVerticalScrollBar().setUnitIncrement(16);
         scrollPane.getHorizontalScrollBar().setUnitIncrement(16);
 
@@ -76,6 +100,7 @@ public class AppStyle {
     private static class ScrollablePanel extends JPanel implements Scrollable {
         public ScrollablePanel(JPanel panel) {
             setLayout(new BorderLayout());
+            setBackground(BACKGROUND_COLOR);
             add(panel, BorderLayout.CENTER);
         }
 
@@ -101,6 +126,10 @@ public class AppStyle {
 
         @Override
         public boolean getScrollableTracksViewportHeight() {
+            if (getParent() instanceof JViewport viewport) {
+                return viewport.getHeight() > getPreferredSize().height;
+            }
+
             return false;
         }
     }
