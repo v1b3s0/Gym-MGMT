@@ -40,6 +40,13 @@ public class AppStyle {
 
     public static final int CARD_RADIUS = 32;
 
+    public static final Dimension DASHBOARD_CARD_SIZE = new Dimension(240, 125);
+    public static final Dimension DASHBOARD_CARD_MIN_SIZE = new Dimension(180, 95);
+
+    public static final Border DASHBOARD_CONTAINER_PADDING = BorderFactory.createEmptyBorder(25, 25, 25, 25);
+
+    public static final Insets DASHBOARD_CARD_INSETS = new Insets(10, 10, 10, 10);
+
     public static final Border FORM_PADDING = BorderFactory.createEmptyBorder(20, 40, 20, 40);
     public static final Border PAGE_PADDING = BorderFactory.createEmptyBorder(25, 35, 25, 35);
 

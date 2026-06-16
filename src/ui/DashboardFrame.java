@@ -4,9 +4,7 @@ import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
-import java.awt.Insets;
 
-import javax.swing.BorderFactory;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -61,16 +59,16 @@ public class DashboardFrame extends JFrame {
         JPanel centerWrapper = new JPanel(new GridBagLayout());
         centerWrapper.setBackground(AppStyle.BACKGROUND_COLOR);
 
-        JPanel moduleContainer = new JPanel(new BorderLayout());
-        moduleContainer.setBackground(AppStyle.DASHBOARD_PANEL_COLOR);
-        moduleContainer.setBorder(BorderFactory.createEmptyBorder(25, 25, 25, 25));
+        JPanel moduleContainer = new RoundedPanel(AppStyle.DASHBOARD_PANEL_COLOR, AppStyle.CARD_RADIUS);
+        moduleContainer.setLayout(new BorderLayout());
+        moduleContainer.setBorder(AppStyle.DASHBOARD_CONTAINER_PADDING);
 
         JPanel cardPanel = new JPanel(new GridBagLayout());
         cardPanel.setOpaque(false);
 
         GridBagConstraints constraints = new GridBagConstraints();
         constraints.fill = GridBagConstraints.BOTH;
-        constraints.insets = new Insets(10, 10, 10, 10);
+        constraints.insets = AppStyle.DASHBOARD_CARD_INSETS;
         constraints.weighty = 1;
 
         addDashboardCard(cardPanel, constraints,

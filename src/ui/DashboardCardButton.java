@@ -3,7 +3,6 @@ package ui;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Cursor;
-import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.GridLayout;
@@ -25,8 +24,8 @@ public class DashboardCardButton extends JPanel {
         this.currentColor = AppStyle.CARD_COLOR;
 
         setLayout(new BorderLayout());
-        setPreferredSize(new Dimension(240, 125));
-        setMinimumSize(new Dimension(180, 95));
+        setPreferredSize(AppStyle.DASHBOARD_CARD_SIZE);
+        setMinimumSize(AppStyle.DASHBOARD_CARD_MIN_SIZE);
 
         setOpaque(false);
         setFocusable(true);
