@@ -1,7 +1,25 @@
-# Compiled class file
+# Compiled Java files
 *.class
 
-# Log file
+# Java build output folders
+bin/
+out/
+build/
+target/
+
+# IDE/editor settings
+.vscode/
+.idea/
+.settings/
+.classpath
+.project
+
+# Runtime CSV data files
+# The program creates these locally in /data.
+# Keep them off GitHub unless you intentionally want sample data committed.
+data/*.csv
+
+# Logs
 *.log
 
 # BlueJ files
@@ -10,7 +28,7 @@
 # Mobile Tools for Java (J2ME)
 .mtj.tmp/
 
-# Package Files #
+# Package files
 *.jar
 *.war
 *.nar
@@ -19,6 +37,6 @@
 *.tar.gz
 *.rar
 
-# virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml
+# JVM crash logs
 hs_err_pid*
 replay_pid*
