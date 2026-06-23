@@ -3,6 +3,7 @@ package util;
 import java.time.LocalDate;
 import java.time.format.DateTimeParseException;
 
+/** Small reusable input checks shared by the form screens. */
 public class ValidationUtil {
     public static boolean isEmpty(String text) {
         return text == null || text.trim().isEmpty();
@@ -29,6 +30,15 @@ public class ValidationUtil {
         try {
             double number = Double.parseDouble(text.trim());
             return number > 0;
+        } catch (NumberFormatException ex) {
+            return false;
+        }
+    }
+
+    public static boolean isNegativeDouble(String text) {
+        try {
+            double number = Double.parseDouble(text.trim());
+            return number < 0;
         } catch (NumberFormatException ex) {
             return false;
         }

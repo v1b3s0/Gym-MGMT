@@ -1,5 +1,6 @@
 package model;
 
+/** A trainer, their specialization, and the member they are assigned to. */
 public class Trainer {
     private String name;
     private String phoneNumber;

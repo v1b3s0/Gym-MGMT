@@ -11,6 +11,10 @@ import model.Payment;
 import model.Trainer;
 import model.WorkoutSchedule;
 
+/**
+ * Reads and writes the application's data as CSV files under a local {@code data/}
+ * folder. Each save rewrites the whole file; quotes/commas are CSV-escaped.
+ */
 public class FileManager {
     private static final Path MEMBERS_FILE = Path.of("data", "members.csv");
     private static final Path TRAINERS_FILE = Path.of("data", "trainers.csv");
@@ -42,6 +46,7 @@ public class FileManager {
         }
     }
 
+    // Called by the GymDatabase constructor; turns each CSV row into a model.Member.
     public static ArrayList<Member> loadMembers() {
         ArrayList<Member> members = new ArrayList<>();
 
@@ -74,7 +79,7 @@ public class FileManager {
                 String goals = values.get(6);
                 String notes = values.get(7);
 
-                Member member = new Member(name, age, phone, email, gender, membership, goals, notes);
+                Member member = new Member(name, age, phone, email, gender, membership, goals, notes); // model.Member
                 members.add(member);
             }
         } catch (IOException | NumberFormatException ex) {
@@ -217,11 +222,12 @@ public class FileManager {
             Files.createDirectories(PAYMENTS_FILE.getParent());
 
             ArrayList<String> lines = new ArrayList<>();
-            lines.add("Member,Membership Type,Payment Date,Amount");
+            lines.add("Member,Type,Membership Type,Payment Date,Amount");
 
             for (Payment payment : payments) {
                 lines.add(
                         escape(payment.getMemberName()) + ","
+                                + escape(payment.getType()) + ","
                                 + escape(payment.getMembershipType()) + ","
                                 + escape(payment.getPaymentDate()) + ","
                                 + payment.getAmount());
@@ -252,16 +258,17 @@ public class FileManager {
 
                 ArrayList<String> values = parseCsvLine(line);
 
-                if (values.size() != 4) {
+                if (values.size() != 5) {
                     continue;
                 }
 
                 String memberName = values.get(0);
-                String membershipType = values.get(1);
-                String paymentDate = values.get(2);
-                double amount = Double.parseDouble(values.get(3));
+                String type = values.get(1);
+                String membershipType = values.get(2);
+                String paymentDate = values.get(3);
+                double amount = Double.parseDouble(values.get(4));
 
-                Payment payment = new Payment(memberName, membershipType, paymentDate, amount);
+                Payment payment = new Payment(memberName, type, membershipType, paymentDate, amount);
                 payments.add(payment);
             }
         } catch (IOException | NumberFormatException ex) {

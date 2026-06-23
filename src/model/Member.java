@@ -1,5 +1,6 @@
 package model;
 
+/** A gym member and their registration details. Plain data holder (POJO). */
 public class Member {
     private String name;
     private int age;

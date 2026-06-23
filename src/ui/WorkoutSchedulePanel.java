@@ -1,16 +1,13 @@
 package ui;
 
 import java.awt.BorderLayout;
-import java.awt.GridLayout;
+import java.awt.GridBagLayout;
 
-import javax.swing.JButton;
-import javax.swing.JComboBox;
-import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
-import javax.swing.SwingConstants;
+import javax.swing.ListSelectionModel;
 import javax.swing.table.DefaultTableModel;
 
 import data.GymDatabase;
@@ -18,121 +15,109 @@ import model.Member;
 import model.Trainer;
 import model.WorkoutSchedule;
 
+/**
+ * Workout schedule screen: assign a member, trainer, workout type, day and time,
+ * then save/edit/delete entries shown in the table.
+ */
 public class WorkoutSchedulePanel extends JPanel {
     private GymDatabase database;
 
-    private JComboBox<String> memberBox;
-    private JComboBox<String> trainerBox;
-    private JComboBox<String> workoutTypeBox;
-    private JComboBox<String> dayBox;
-    private JComboBox<String> timeBox;
+    private RoundedComboBox memberBox;
+    private RoundedComboBox trainerBox;
+    private RoundedComboBox workoutTypeBox;
+    private RoundedComboBox dayBox;
+    private RoundedComboBox timeBox;
 
-    private JButton submitButton;
-    private JButton clearButton;
-    private JButton backButton;
+    private RoundedButton submitButton;
+    private RoundedButton deleteButton;
+    private RoundedButton clearButton;
+    private RoundedButton backButton;
 
     private DefaultTableModel workoutTableModel;
     private JTable workoutTable;
+
+    private int selectedRow = -1;
 
     public WorkoutSchedulePanel(GymDatabase database, Runnable backAction) {
         this.database = database;
 
         setLayout(new BorderLayout());
+        setBackground(AppStyle.BACKGROUND_COLOR);
 
-        JLabel titleLabel = new JLabel("Workout Schedule", SwingConstants.CENTER);
-        titleLabel.setFont(AppStyle.TITLE_FONT);
+        add(AppStyle.createPageTitle("Workout Schedule"), BorderLayout.NORTH);
 
-        add(titleLabel, BorderLayout.NORTH);
-
-        JPanel formPanel = new JPanel(new GridLayout(6, 2, 10, 10));
+        JPanel formPanel = new JPanel(new GridBagLayout());
+        formPanel.setOpaque(false);
         formPanel.setBorder(AppStyle.FORM_PADDING);
 
-        memberBox = new JComboBox<>();
-        trainerBox = new JComboBox<>();
-
+        memberBox = new RoundedComboBox();
+        trainerBox = new RoundedComboBox();
         loadMembersIntoComboBox();
         loadTrainersIntoComboBox();
 
-        workoutTypeBox = new JComboBox<>(new String[] {
-                "Cardio",
-                "Strength Training",
-                "Weight Loss",
-                "Muscle Gain",
-                "General Fitness"
+        workoutTypeBox = new RoundedComboBox(new String[] {
+                "Cardio", "Strength Training", "Weight Loss", "Muscle Gain", "General Fitness"
         });
 
-        dayBox = new JComboBox<>(new String[] {
-                "Monday",
-                "Tuesday",
-                "Wednesday",
-                "Thursday",
-                "Friday",
-                "Saturday",
-                "Sunday"
+        dayBox = new RoundedComboBox(new String[] {
+                "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"
         });
 
-        timeBox = new JComboBox<>(new String[] {
-                "Morning",
-                "Afternoon",
-                "Evening"
-        });
+        timeBox = new RoundedComboBox(new String[] { "Morning", "Afternoon", "Evening" });
 
-        submitButton = new JButton("Save Schedule");
-        clearButton = new JButton("Clear");
-        backButton = new JButton("Back");
+        submitButton = new RoundedButton("Save Schedule");
+        deleteButton = new RoundedButton("Delete");
+        clearButton = new RoundedButton("Clear");
+        backButton = new RoundedButton("Back");
+        deleteButton.setEnabled(false);
 
-        formPanel.add(new JLabel("Member:"));
-        formPanel.add(memberBox);
+        AppStyle.addFormRow(formPanel, 0, "Member:", memberBox);
+        AppStyle.addFormRow(formPanel, 1, "Trainer:", trainerBox);
+        AppStyle.addFormRow(formPanel, 2, "Workout Type:", workoutTypeBox);
+        AppStyle.addFormRow(formPanel, 3, "Day:", dayBox);
+        AppStyle.addFormRow(formPanel, 4, "Time:", timeBox);
 
-        formPanel.add(new JLabel("Trainer:"));
-        formPanel.add(trainerBox);
+        AppStyle.addFormFullRow(formPanel, 5,
+                AppStyle.createButtonRow(submitButton, deleteButton, clearButton, backButton));
 
-        formPanel.add(new JLabel("Workout Type:"));
-        formPanel.add(workoutTypeBox);
-
-        formPanel.add(new JLabel("Day:"));
-        formPanel.add(dayBox);
-
-        formPanel.add(new JLabel("Time:"));
-        formPanel.add(timeBox);
-
-        JPanel buttonPanel = new JPanel();
-        buttonPanel.add(submitButton);
-        buttonPanel.add(clearButton);
-        buttonPanel.add(backButton);
-
-        formPanel.add(new JLabel());
-        formPanel.add(buttonPanel);
-
-        String[] columns = {
-                "Member",
-                "Trainer",
-                "Workout Type",
-                "Day",
-                "Time"
+        String[] columns = { "Member", "Trainer", "Workout Type", "Day", "Time" };
+        workoutTableModel = new DefaultTableModel(columns, 0) {
+            @Override
+            public boolean isCellEditable(int row, int column) {
+                return false;
+            }
         };
-
-        workoutTableModel = new DefaultTableModel(columns, 0);
         workoutTable = new JTable(workoutTableModel);
+        workoutTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+        workoutTable.getSelectionModel().addListSelectionListener(e -> {
+            if (!e.getValueIsAdjusting()) {
+                int row = workoutTable.getSelectedRow();
+                if (row >= 0) {
+                    populateFormFromRow(row);
+                }
+            }
+        });
 
         loadExistingWorkoutSchedulesIntoTable();
-
         JScrollPane tableScrollPane = AppStyle.createTableScrollPane(workoutTable);
 
         JPanel mainPanel = new JPanel(new BorderLayout(10, 10));
+        mainPanel.setOpaque(false);
         mainPanel.add(formPanel, BorderLayout.NORTH);
         mainPanel.add(tableScrollPane, BorderLayout.CENTER);
 
         submitButton.addActionListener(e -> submitWorkoutSchedule());
+        deleteButton.addActionListener(e -> deleteWorkoutSchedule());
         clearButton.addActionListener(e -> clearForm());
         backButton.addActionListener(e -> backAction.run());
 
         add(AppStyle.createPageScrollPane(mainPanel), BorderLayout.CENTER);
+
+        AppStyle.installEscBehavior(this, backAction);
     }
 
     private void loadMembersIntoComboBox() {
         memberBox.addItem("Select Member");
-
         for (Member member : database.getMembers()) {
             memberBox.addItem(member.getName());
         }
@@ -140,22 +125,34 @@ public class WorkoutSchedulePanel extends JPanel {
 
     private void loadTrainersIntoComboBox() {
         trainerBox.addItem("Select Trainer");
-
         for (Trainer trainer : database.getTrainers()) {
             trainerBox.addItem(trainer.getName());
         }
     }
 
     private void loadExistingWorkoutSchedulesIntoTable() {
-        for (WorkoutSchedule workoutSchedule : database.getWorkoutSchedules()) {
-            workoutTableModel.addRow(new Object[] {
-                    workoutSchedule.getMemberName(),
-                    workoutSchedule.getTrainerName(),
-                    workoutSchedule.getWorkoutType(),
-                    workoutSchedule.getDay(),
-                    workoutSchedule.getTime()
-            });
+        for (WorkoutSchedule schedule : database.getWorkoutSchedules()) {
+            workoutTableModel.addRow(rowFor(schedule));
         }
+    }
+
+    private Object[] rowFor(WorkoutSchedule schedule) {
+        return new Object[] {
+                schedule.getMemberName(), schedule.getTrainerName(),
+                schedule.getWorkoutType(), schedule.getDay(), schedule.getTime()
+        };
+    }
+
+    private void populateFormFromRow(int row) {
+        selectedRow = row;
+        memberBox.setSelectedItem(workoutTableModel.getValueAt(row, 0));
+        trainerBox.setSelectedItem(workoutTableModel.getValueAt(row, 1));
+        workoutTypeBox.setSelectedItem(workoutTableModel.getValueAt(row, 2));
+        dayBox.setSelectedItem(workoutTableModel.getValueAt(row, 3));
+        timeBox.setSelectedItem(workoutTableModel.getValueAt(row, 4));
+
+        submitButton.setText("Save Changes");
+        deleteButton.setEnabled(true);
     }
 
     private void submitWorkoutSchedule() {
@@ -175,33 +172,48 @@ public class WorkoutSchedulePanel extends JPanel {
             return;
         }
 
-        WorkoutSchedule workoutSchedule = new WorkoutSchedule(
-                memberName,
-                trainerName,
-                workoutType,
-                day,
-                time);
+        WorkoutSchedule schedule = new WorkoutSchedule(memberName, trainerName, workoutType, day, time); // model.WorkoutSchedule
 
-        database.addWorkoutSchedule(workoutSchedule);
-
-        workoutTableModel.addRow(new Object[] {
-                workoutSchedule.getMemberName(),
-                workoutSchedule.getTrainerName(),
-                workoutSchedule.getWorkoutType(),
-                workoutSchedule.getDay(),
-                workoutSchedule.getTime()
-        });
-
-        JOptionPane.showMessageDialog(this, "Workout schedule saved successfully.");
+        if (selectedRow >= 0) {
+            database.updateWorkoutSchedule(selectedRow, schedule); // -> GymDatabase.updateWorkoutSchedule (re-saves the CSV)
+            Object[] row = rowFor(schedule);
+            for (int col = 0; col < row.length; col++) {
+                workoutTableModel.setValueAt(row[col], selectedRow, col);
+            }
+            JOptionPane.showMessageDialog(this, "Workout schedule updated successfully.");
+        } else {
+            database.addWorkoutSchedule(schedule); // -> GymDatabase.addWorkoutSchedule (re-saves the CSV)
+            workoutTableModel.addRow(rowFor(schedule));
+            JOptionPane.showMessageDialog(this, "Workout schedule saved successfully.");
+        }
 
         clearForm();
     }
 
+    private void deleteWorkoutSchedule() {
+        if (selectedRow < 0) {
+            return;
+        }
+
+        if (!ConfirmDialog.show(this, "Are you sure?")) {
+            return;
+        }
+
+        database.removeWorkoutSchedule(selectedRow); // -> GymDatabase.removeWorkoutSchedule (re-saves the CSV)
+        workoutTableModel.removeRow(selectedRow);
+        clearForm();
+    }
+
     private void clearForm() {
+        selectedRow = -1;
         memberBox.setSelectedIndex(0);
         trainerBox.setSelectedIndex(0);
         workoutTypeBox.setSelectedIndex(0);
         dayBox.setSelectedIndex(0);
         timeBox.setSelectedIndex(0);
+
+        workoutTable.clearSelection();
+        submitButton.setText("Save Schedule");
+        deleteButton.setEnabled(false);
     }
 }

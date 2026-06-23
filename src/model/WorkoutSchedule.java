@@ -1,5 +1,6 @@
 package model;
 
+/** A single workout session: which member, trainer, type, day, and time. */
 public class WorkoutSchedule {
     private String memberName;
     private String trainerName;
