@@ -40,3 +40,11 @@ data/*.csv
 # JVM crash logs
 hs_err_pid*
 replay_pid*
+
+# --- Gradle ---
+# Local Gradle cache for this project (safe to delete, never committed)
+.gradle/
+
+# The wrapper JAR is committed on purpose, so clones and CI run the pinned
+# Gradle with zero install. Re-include it past the blanket *.jar rule above.
+!gradle/wrapper/gradle-wrapper.jar
