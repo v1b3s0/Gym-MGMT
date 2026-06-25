@@ -16,13 +16,13 @@ import java.awt.RenderingHints;
 import java.awt.image.BufferedImage;
 import java.awt.image.ConvolveOp;
 import java.awt.image.Kernel;
-import java.io.File;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
 import javax.imageio.ImageIO;
-import javax.swing.Box;
 import javax.swing.BorderFactory;
+import javax.swing.Box;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -254,14 +254,12 @@ public class AppStyle {
 
     // ---- Background image ----
     private static void loadBackground() {
-        try {
-            File file = new File("assets/background.jpg");
-            if (!file.exists()) {
-                file = new File("background.jpg");
+        try (InputStream in = AppStyle.class.getResourceAsStream("/assets/background.jpg")) {
+            if (in == null) {
+                backgroundImage = null;
+                return;
             }
-            if (file.exists()) {
-                backgroundImage = blur(ImageIO.read(file));
-            }
+            backgroundImage = blur(ImageIO.read(in));
         } catch (Exception ex) {
             backgroundImage = null;
         }
@@ -278,7 +276,7 @@ public class AppStyle {
         gg.drawImage(src, 0, 0, null);
         gg.dispose();
 
-        int radius = 4;                 // gentle softening, keeps full resolution
+        int radius = 4; // gentle softening, keeps full resolution
         int len = radius * 2 + 1;
         float[] kernel = gaussianKernel(len, radius / 2f);
         ConvolveOp op = new ConvolveOp(new Kernel(len, len, kernel), ConvolveOp.EDGE_NO_OP, null);
