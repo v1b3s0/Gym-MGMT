@@ -1,5 +1,6 @@
 package ui;
 
+import java.awt.BasicStroke;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
@@ -116,6 +117,11 @@ public class AppStyle {
     public static final Color LOGOUT_COLOR = new Color(0x6E, 0x65, 0x3A);
     public static final Color LOGOUT_HOVER_COLOR = new Color(0x8C, 0x7E, 0x40);
     public static final Color LOGOUT_PRESS_COLOR = new Color(0xA0, 0x8E, 0x44);
+
+    // App Icon color theme (Main gold dumbell with cream background)
+    public static final Color ICON_BG_COLOR = new Color(0xF5, 0xED, 0xDF); // cream
+    public static final Color ICON_SHADOW_COLOR = new Color(0x5A, 0x5A, 0x5A); // grey
+    public static final Color ICON_OUTLINE_COLOR = new Color(0x1A, 0x1A, 0x1A); // near-black
 
     // ---- Radii ----
     public static final int FIELD_RADIUS = 14;
@@ -348,21 +354,46 @@ public class AppStyle {
         Graphics2D g = img.createGraphics();
         g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 
-        // Rounded dark background so the icon reads on any taskbar colour
-        g.setColor(SIDEBAR_OPAQUE_COLOR);
+        // Cream rounded background
+        g.setColor(ICON_BG_COLOR);
         g.fillRoundRect(0, 0, s - 1, s - 1, s / 4, s / 4);
 
-        // Gold dumbbell
-        g.setColor(GOLD_COLOR);
-        int barH = Math.max(2, Math.round(s * 0.12f));
-        g.fillRect(Math.round(s * 0.30f), (s - barH) / 2, Math.round(s * 0.40f), barH);
-        int weightW = Math.max(3, Math.round(s * 0.13f));
-        int weightH = Math.round(s * 0.42f);
-        g.fillRoundRect(Math.round(s * 0.17f), (s - weightH) / 2, weightW, weightH, weightW / 2, weightW / 2);
-        g.fillRoundRect(Math.round(s * 0.70f), (s - weightH) / 2, weightW, weightH, weightW / 2, weightW / 2);
+        float d = 0.03f; // shadow offset (down-right)
+
+        // Grey shadow pass — same five plates, offset, no outline
+        plate(g, s, ICON_SHADOW_COLOR, null, 0.34f + d, 0.46f + d, 0.32f, 0.08f); // bar
+        plate(g, s, ICON_SHADOW_COLOR, null, 0.24f + d, 0.26f + d, 0.10f, 0.48f); // inner L
+        plate(g, s, ICON_SHADOW_COLOR, null, 0.66f + d, 0.26f + d, 0.10f, 0.48f); // inner R
+        plate(g, s, ICON_SHADOW_COLOR, null, 0.15f + d, 0.34f + d, 0.08f, 0.32f); // outer L
+        plate(g, s, ICON_SHADOW_COLOR, null, 0.77f + d, 0.34f + d, 0.08f, 0.32f); // outer R
+
+        // Gold plates with black outline
+        plate(g, s, GOLD_COLOR, ICON_OUTLINE_COLOR, 0.34f, 0.46f, 0.32f, 0.08f); // bar
+        plate(g, s, GOLD_COLOR, ICON_OUTLINE_COLOR, 0.24f, 0.26f, 0.10f, 0.48f); // inner L
+        plate(g, s, GOLD_COLOR, ICON_OUTLINE_COLOR, 0.66f, 0.26f, 0.10f, 0.48f); // inner R
+        plate(g, s, GOLD_COLOR, ICON_OUTLINE_COLOR, 0.15f, 0.34f, 0.08f, 0.32f); // outer L
+        plate(g, s, GOLD_COLOR, ICON_OUTLINE_COLOR, 0.77f, 0.34f, 0.08f, 0.32f); // outer R
 
         g.dispose();
         return img;
+    }
+
+    // fills a rounded rect in fractional coords; outline can be null for the shadow
+    private static void plate(Graphics2D g, int s, Color fill, Color outline, float fx, float fy, float fw, float fh) {
+        int x = Math.round(s * fx);
+        int y = Math.round(s * fy);
+        int w = Math.round(s * fw);
+        int h = Math.round(s * fh);
+        int arc = Math.max(2, Math.round(s * 0.06f));
+
+        g.setColor(fill);
+        g.fillRoundRect(x, y, w, h, arc, arc);
+
+        if (outline != null) {
+            g.setColor(outline);
+            g.setStroke(new BasicStroke(Math.max(1f, s * 0.03f)));
+            g.drawRoundRect(x, y, w, h, arc, arc);
+        }
     }
 
     // ---- Shared widgets ----
