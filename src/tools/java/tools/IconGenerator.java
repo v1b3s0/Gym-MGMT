@@ -13,13 +13,17 @@ import javax.imageio.ImageIO;
 import ui.AppStyle;
 
 /**
- * Build-time tool (not shipped). Renders ui.AppStyle's dumbbell at several
- * sizes and packs them into a single Windows .ico for jpackage.
+ * Build-time tool (not shipped). Renders ui.AppStyle's dumbbell and writes the
+ * icons jpackage needs: a multi-size Windows .ico and a single Linux .png.
  * Run with: ./gradlew generateIcon
  */
 public class IconGenerator {
     private static final int[] SIZES = { 16, 24, 32, 48, 64, 128, 256 };
-    private static final Path OUTPUT = Path.of("packaging", "windows", "icon.ico");
+    private static final Path ICO_OUTPUT = Path.of("packaging", "windows", "icon.ico");
+
+    // Linux uses a single .png; no 256 ceiling like .ico, so render it larger.
+    private static final int PNG_SIZE = 512;
+    private static final Path PNG_OUTPUT = Path.of("packaging", "linux", "icon.png");
 
     public static void main(String[] args) throws IOException {
         // 1. Render each size and PNG-encode it — reusing the app's REAL drawing.
@@ -34,10 +38,16 @@ public class IconGenerator {
         // 2. Wrap those PNGs in an .ico container.
         byte[] ico = buildIco(pngs);
 
-        // 3. Write it out, creating packaging/windows/ if needed.
-        Files.createDirectories(OUTPUT.getParent());
-        Files.write(OUTPUT, ico);
-        System.out.println("Wrote " + ico.length + " bytes to " + OUTPUT.toAbsolutePath());
+        // 3. Write the .ico out, creating packaging/windows/ if needed.
+        Files.createDirectories(ICO_OUTPUT.getParent());
+        Files.write(ICO_OUTPUT, ico);
+        System.out.println("Wrote " + ico.length + " bytes to " + ICO_OUTPUT.toAbsolutePath());
+
+        // 4. Write the Linux .png (a single high-res image).
+        BufferedImage linux = AppStyle.createAppIcon(PNG_SIZE);
+        Files.createDirectories(PNG_OUTPUT.getParent());
+        ImageIO.write(linux, "png", PNG_OUTPUT.toFile());
+        System.out.println("Wrote " + PNG_OUTPUT.toAbsolutePath());
     }
 
     // An .ico is: a 6-byte header, then one 16-byte directory entry per image,

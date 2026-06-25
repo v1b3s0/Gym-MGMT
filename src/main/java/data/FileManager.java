@@ -302,8 +302,13 @@ public class FileManager {
         String appPath = System.getProperty("jpackage.app-path");
 
         if (appPath != null) {
-            Path exePath = Path.of(appPath);
-            return exePath.getParent().resolve("data");
+            Path dir = Path.of(appPath).getParent();
+            // Windows puts the launcher in the root folder; Linux puts it in bin/.
+            // Step out of bin/ so data lands in the portable root either way.
+            if (dir.getFileName().toString().equals("bin")) {
+                dir = dir.getParent();
+            }
+            return dir.resolve("data");
         }
         return Path.of("data");
     }
