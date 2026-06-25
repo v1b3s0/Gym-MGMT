@@ -34,6 +34,27 @@ producing self-contained, portable builds with `jpackage`.
 - **CSV** flat-file storage (no database) — data is written to a portable
   `data/` folder so the app stays self-contained
 
+## Download
+
+Grab the latest portable build from the
+[Releases](https://github.com/v1b3s0/Gym-MGMT/releases) page:
+
+- **Windows** — `Gym-MGMT-<version>-windows.zip`
+- **Linux** — `Gym-MGMT-<version>-linux.zip`
+
+Unzip it anywhere and run the launcher inside the `Gym-MGMT/` folder. The build is
+self-contained — it bundles its own trimmed Java runtime, so **no system Java is
+required**. Your data is saved to a `data/` folder next to the app, keeping the
+whole thing portable.
+
+### Windows SmartScreen note
+
+The first time you run the Windows build, Windows may show a **"Windows protected
+your PC"** SmartScreen prompt. This is expected: the app isn't code-signed (signing
+certificates cost money and require a registered business or hardware token — not
+worth it for a free hobby project). The app is safe to run — click
+**More info → Run anyway**.
+
 ## Running from source
 
 Requires a JDK 25+ on your machine. From the project root:
@@ -42,20 +63,20 @@ Requires a JDK 25+ on your machine. From the project root:
 ./gradlew run
 ```
 
-## Packaging (in progress)
+## Packaging
 
-The goal is a portable, self-contained build per OS — no system Java required to
-run it:
+A portable, self-contained build per OS — no system Java required to run it:
 
 - [x] Gradle build (Kotlin DSL)
 - [x] Portable data + resource handling (data and assets travel with the app)
-- [x] App icon generated as a multi-resolution Windows `.ico`
-- [ ] Trimmed runtime + portable app image via `jlink` / `jpackage`
-- [ ] CI matrix building Windows + Linux portable zips
-- [ ] `v0.1` GitHub Release with both builds attached
+- [x] App icon generated from code as a multi-resolution Windows `.ico` and Linux `.png`
+- [x] Trimmed runtime + portable app image via `jlink` / `jpackage`
+- [x] CI matrix building Windows + Linux portable zips
+- [x] `v0.1` GitHub Release with both builds attached
 
-> Native installers can't be cross-compiled, so each OS build is produced on its
-> own platform.
+> Native builds can't be cross-compiled, so each OS build is produced on its own
+> platform — the GitHub Actions matrix builds Windows on a Windows runner and Linux
+> on a Linux runner.
 
 ## Project structure
 
@@ -63,10 +84,12 @@ run it:
 src/main/java/        application source (Swing UI, models, CSV storage)
 src/main/resources/   bundled assets (background image)
 src/tools/java/       build-time tools (icon generator) — not shipped
-packaging/            release assets (Windows .ico)
+packaging/            release icon assets (Windows .ico, Linux .png)
+.github/workflows/    CI: builds both portable zips and publishes releases
 ```
 
 ## Status
 
-Early personal project — `v0.1` packaging work is ongoing. The app itself is
-fully functional from source.
+`v0.1` is released — portable Windows and Linux builds are on the
+[Releases](https://github.com/v1b3s0/Gym-MGMT/releases) page. The app is fully
+functional both from source and as a packaged build.
