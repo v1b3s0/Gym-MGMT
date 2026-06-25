@@ -16,9 +16,9 @@ public class PasswordToggleButton extends JButton {
     private final char echoChar;
     private boolean visible;
 
-    public PasswordToggleButton(JPasswordField field) {
-        this.field = field;
-        this.echoChar = field.getEchoChar();
+    public PasswordToggleButton(JPasswordField passwordField) {
+        this.field = passwordField;
+        this.echoChar = passwordField.getEchoChar();
 
         setPreferredSize(new Dimension(38, 34));
         setContentAreaFilled(false);
@@ -29,7 +29,7 @@ public class PasswordToggleButton extends JButton {
 
         addActionListener(e -> {
             visible = !visible;
-            field.setEchoChar(visible ? (char) 0 : echoChar);
+            this.field.setEchoChar(visible ? (char) 0 : echoChar);
             repaint();
         });
     }
