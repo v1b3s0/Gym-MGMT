@@ -349,7 +349,7 @@ public class AppStyle {
         return icons;
     }
 
-    private static BufferedImage createAppIcon(int s) {
+    public static BufferedImage createAppIcon(int s) {
         BufferedImage img = new BufferedImage(s, s, BufferedImage.TYPE_INT_ARGB);
         Graphics2D g = img.createGraphics();
         g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
