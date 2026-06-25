@@ -12,14 +12,18 @@ import model.Trainer;
 import model.WorkoutSchedule;
 
 /**
- * Reads and writes the application's data as CSV files under a local {@code data/}
- * folder. Each save rewrites the whole file; quotes/commas are CSV-escaped.
+ * Reads and writes the application's data as CSV files in a {@code data} folder
+ * next to the packaged application (or a local {@code data/} folder when run
+ * from
+ * source). Each save rewrites the whole file; quotes/commas are CSV-escaped.
  */
 public class FileManager {
-    private static final Path MEMBERS_FILE = Path.of("data", "members.csv");
-    private static final Path TRAINERS_FILE = Path.of("data", "trainers.csv");
-    private static final Path WORKOUTS_FILE = Path.of("data", "workouts.csv");
-    private static final Path PAYMENTS_FILE = Path.of("data", "payments.csv");
+    private static final Path DATA_DIR = resolveDataDir();
+
+    private static final Path MEMBERS_FILE = DATA_DIR.resolve("members.csv");
+    private static final Path TRAINERS_FILE = DATA_DIR.resolve("trainers.csv");
+    private static final Path WORKOUTS_FILE = DATA_DIR.resolve("workouts.csv");
+    private static final Path PAYMENTS_FILE = DATA_DIR.resolve("payments.csv");
 
     public static void saveMembers(ArrayList<Member> members) {
         try {
@@ -46,7 +50,8 @@ public class FileManager {
         }
     }
 
-    // Called by the GymDatabase constructor; turns each CSV row into a model.Member.
+    // Called by the GymDatabase constructor; turns each CSV row into a
+    // model.Member.
     public static ArrayList<Member> loadMembers() {
         ArrayList<Member> members = new ArrayList<>();
 
@@ -291,6 +296,16 @@ public class FileManager {
         }
 
         return value;
+    }
+
+    private static Path resolveDataDir() {
+        String appPath = System.getProperty("jpackage.app-path");
+
+        if (appPath != null) {
+            Path exePath = Path.of(appPath);
+            return exePath.getParent().resolve("data");
+        }
+        return Path.of("data");
     }
 
     private static ArrayList<String> parseCsvLine(String line) {
